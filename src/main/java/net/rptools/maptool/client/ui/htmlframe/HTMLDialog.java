@@ -15,13 +15,6 @@
 package net.rptools.maptool.client.ui.htmlframe;
 
 import com.google.gson.JsonObject;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.math.BigDecimal;
-import java.util.*;
-import javax.swing.*;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.functions.MacroLinkFunction;
 import net.rptools.maptool.client.functions.json.JSONMacroFunctions;
@@ -29,6 +22,13 @@ import net.rptools.maptool.client.swing.SwingUtil;
 import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.Token;
 import net.rptools.maptool.util.FunctionUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.*;
 
 /**
  * Represents a JDialog holding an HTML panel. Can hold either an HTML3.2 (Swing) or a HTML5
@@ -256,7 +256,7 @@ public class HTMLDialog extends JDialog implements HTMLPanelContainer {
    * Return a json with the width, height, temporary variable and title of the dialog
    *
    * @param name The name of the frame.
-   * @return A json with the width, height, temporary, title, and value of dialog, if one was found
+   * @return A json with the width, height, temporary, title, visible, noframe, input, closebutton, html5, and value of dialog, if one was found
    */
   public static Optional<JsonObject> getDialogProperties(String name) {
     if (dialogs.containsKey(name)) {
@@ -279,14 +279,6 @@ public class HTMLDialog extends JDialog implements HTMLPanelContainer {
       Object dialogValue = dialog.getValue();
       if (dialogValue == null) {
         dialogValue = "";
-      } else {
-        if (dialogValue instanceof String) {
-          // try to convert to a number
-          try {
-            BigDecimal dialogValueBD = new BigDecimal(dialogValue.toString());
-          } catch (Exception e) {
-          }
-        }
       }
       dialogProperties.add("value", JSONMacroFunctions.getInstance().asJsonElement(dialogValue));
 

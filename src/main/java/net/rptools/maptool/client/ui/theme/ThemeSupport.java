@@ -19,14 +19,6 @@ import com.formdev.flatlaf.FlatLaf;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jidesoft.plaf.LookAndFeelFactory;
-import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import javax.swing.*;
 import net.rptools.maptool.client.AppConstants;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.ui.themes.AahLAF;
@@ -36,6 +28,15 @@ import net.rptools.maptool.client.ui.themes.AahLAF_VLP;
 import net.rptools.maptool.events.MapToolEventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 /** Class used to implement Theme support for MapTool. */
 public class ThemeSupport {

@@ -14,18 +14,10 @@
  */
 package net.rptools.maptool.client.functions;
 
+import com.google.common.collect.Streams;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.awt.*;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.ConcurrentSkipListSet;
-import javax.swing.*;
 import net.rptools.maptool.client.AppPreferences;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolExpressionParser;
@@ -33,20 +25,10 @@ import net.rptools.maptool.client.ui.htmlframe.HTMLDialog;
 import net.rptools.maptool.client.ui.htmlframe.HTMLFrame;
 import net.rptools.maptool.client.ui.htmlframe.HTMLOverlayManager;
 import net.rptools.maptool.client.ui.token.*;
-import net.rptools.maptool.client.ui.zone.renderer.ZoneRenderer;
 import net.rptools.maptool.language.I18N;
-import net.rptools.maptool.model.Campaign;
-import net.rptools.maptool.model.CampaignProperties;
-import net.rptools.maptool.model.Grid;
-import net.rptools.maptool.model.GridFactory;
-import net.rptools.maptool.model.Light;
-import net.rptools.maptool.model.LightSource;
-import net.rptools.maptool.model.LookupTable;
-import net.rptools.maptool.model.ShapeType;
-import net.rptools.maptool.model.SightType;
-import net.rptools.maptool.model.Token;
-import net.rptools.maptool.model.Zone;
+import net.rptools.maptool.model.*;
 import net.rptools.maptool.model.drawing.DrawableColorPaint;
+import net.rptools.maptool.model.drawing.DrawablePaint;
 import net.rptools.maptool.model.drawing.DrawableTexturePaint;
 import net.rptools.maptool.server.ServerPolicy;
 import net.rptools.maptool.util.FunctionUtil;
@@ -56,6 +38,20 @@ import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 import net.rptools.parser.VariableResolver;
 import net.rptools.parser.function.AbstractFunction;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class getInfoFunction extends AbstractFunction {
 
@@ -65,7 +61,7 @@ public class getInfoFunction extends AbstractFunction {
   private SysInfoProvider sysInfoProvider;
 
   private getInfoFunction() {
-    super(1, 1, "getInfo");
+    super(0, 1, "getInfo");
     sysInfoProvider = new MapToolSysInfoProvider();
   }
 
@@ -89,32 +85,72 @@ public class getInfoFunction extends AbstractFunction {
     return instance;
   }
 
+  private final Map<String, MethodHandle> subfuncs = new HashMap<>();
+
+  static {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    // mt is ()getInfoFunction
+    MethodType mt = MethodType.methodType(getInfoFunction.class);
+    try {
+      mh = lookup.findVirtual(getInfoFunction.class, "getMapInfo", mt);
+    } catch (Throwable e) {
+      throw new RuntimeException(e);
+    }
+    Map<String, String> func_list = Map.ofEntries(
+      new AbstractMap.SimpleEntry<String, String>("map", "getMapInfo"),
+      new AbstractMap.SimpleEntry<String, String>("zone", "getMapInfo"), // old
+      new AbstractMap.SimpleEntry<String, String>("server", "getServerInfo"),
+      new AbstractMap.SimpleEntry<String, String>("client", "getClientInfo"),
+      new AbstractMap.SimpleEntry<String, String>("functions", "getFunctionLists"),
+      new AbstractMap.SimpleEntry<String, String>("campaign", "getCampaignInfo"),
+      new AbstractMap.SimpleEntry<String, String>("theme", "getThemeInfo"),
+      new AbstractMap.SimpleEntry<String, String>("themelist", "getThemeList"),
+      new AbstractMap.SimpleEntry<String, String>("debug", "getDebugInfo")
+    );
+    for (Map.Entry<String, String> entry : func_list.entrySet()) {
+      try {
+        MethodHandle mh = lookup.findVirtual(getInfoFunction.class, entry.getValue(), mt);
+        instance.subfuncs.put(entry.getKey(), mh);
+      } catch (Throwable e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
   @Override
   public Object childEvaluate(
       Parser parser, VariableResolver resolver, String functionName, List<Object> param)
       throws ParserException {
-    String infoType = param.get(0).toString();
+    String infoType = param.getFirst().toString();
 
-    if (infoType.equalsIgnoreCase("map") || infoType.equalsIgnoreCase("zone")) {
-      return getMapInfo();
-    } else if (infoType.equalsIgnoreCase("client")) {
-      return getClientInfo();
-    } else if (infoType.equalsIgnoreCase("server")) {
-      return getServerInfo();
-    } else if (infoType.equalsIgnoreCase("campaign")) {
-      return getCampaignInfo();
-    } else if (infoType.equalsIgnoreCase("theme")) {
-      return getThemeInfo();
-    } else if (infoType.equalsIgnoreCase("debug")) {
-      return getDebugInfo();
-    } else if (infoType.equalsIgnoreCase("functions")) {
-      return getFunctionLists();
+    if (param.isEmpty()) {
+      // return a list of all possible parameter values for arg1
+      JsonArray arr = new JsonArray(instance.subfuncs.size());
+      Streams.stream(instance.subfuncs.keySet().stream().iterator())
+              .sorted()
+              .forEach(arr::add);
+      return arr;
+    }
+    if (param.getFirst() instanceof String firstParam) {
+      MethodHandle mh = instance.subfuncs.get(firstParam);
+      try {
+          JsonObject obj = (JsonObject) mh.invoke();
+          return obj;
+      } catch (Throwable e) {
+          throw new RuntimeException(e);
+      }
     } else {
       throw new ParserException(
-          I18N.getText("macro.function.getInfo.invalidArg", param.get(0).toString()));
+          I18N.getText("macro.function.getInfo.invalidArg", param.getFirst().toString()));
     }
   }
 
+  /**
+   * Retrieves a list of all built in and user-defined functions, returning
+   * each in a property of a single JsonObject.
+   *
+   * @return
+   */
   private JsonObject getFunctionLists() {
     UserDefinedMacroFunctions UDF = UserDefinedMacroFunctions.getInstance();
     JsonObject udfList = new JsonObject();
@@ -181,32 +217,27 @@ public class getInfoFunction extends AbstractFunction {
     ginfo.addProperty("second dimension", grid.getSecondDimension());
     minfo.add("grid", ginfo);
 
-    {
-      final var backgroundPaint = zone.getBackgroundPaint();
-      String background = null;
-      if (backgroundPaint instanceof DrawableColorPaint dcp) {
-        background = String.format("#%h", zone.getGridColor());
-      } else if (backgroundPaint instanceof DrawableTexturePaint dtp) {
-        background = "asset://" + dtp.getAssetId().toString();
-      }
-      minfo.addProperty("background paint", background);
-    }
-    {
-      final var fogPaint = zone.getFogPaint();
-      String fog = null;
-      if (fogPaint instanceof DrawableColorPaint dcp) {
-        fog = String.format("#%h", zone.getGridColor());
-      } else if (fogPaint instanceof DrawableTexturePaint dtp) {
-        fog = "asset://" + dtp.getAssetId().toString();
-      }
-      minfo.addProperty("fog paint", fog);
-    }
-    {
-      final var mapAsset = zone.getMapAssetId();
-      minfo.addProperty("map asset", mapAsset == null ? null : "asset://" + mapAsset.toString());
-    }
+    String background = getBackground(zone.getBackgroundPaint());
+    minfo.addProperty("background paint", background);
+
+    background = getBackground(zone.getFogPaint());
+    minfo.addProperty("fog paint", background);
+
+    final var mapAsset = zone.getMapAssetId();
+    minfo.addProperty("map asset", mapAsset == null ? null : "asset://" + mapAsset.toString());
 
     return minfo;
+  }
+
+  @Nullable
+  private static String getBackground(DrawablePaint drawable) {
+    String background = null;
+    if (drawable instanceof DrawableColorPaint dcp) {
+      background = String.format("#%h", dcp.getColor());
+    } else if (drawable instanceof DrawableTexturePaint dtp) {
+      background = "asset://" + dtp.getAssetId().toString();
+    }
+    return background;
   }
 
   /**
@@ -292,19 +323,15 @@ public class getInfoFunction extends AbstractFunction {
       String versionProperty,
       String unknownVersionText) {
     JsonObject libInfo = new JsonObject();
-    for (ZoneRenderer zr : MapTool.getFrame().getZoneRenderers()) {
-      Zone zone = zr.getZone();
-      for (Token token : zone.getAllTokens()) {
-        if (token.getName().toLowerCase().startsWith(prefix)) {
-          if (token.getProperty(versionProperty) != null) {
-            libInfo.addProperty(token.getName(), token.getProperty(versionProperty).toString());
-          } else {
-            libInfo.addProperty(token.getName(), unknownVersionText);
-          }
-        }
-      }
-    }
-    if (libInfo.size() > 0) {
+    Streams.stream(MapTool.getFrame().getZoneRenderers().listIterator())
+            .parallel()
+            .flatMap(zr -> zr.getZone().getAllTokens().stream())
+            .filter(t -> t.getName().toLowerCase(Locale.ROOT).startsWith(prefix))
+            .forEach(t -> libInfo.addProperty(t.getName(),
+                t.getProperty(versionProperty) != null
+                ? t.getProperty(versionProperty).toString()
+                : unknownVersionText));
+    if (!libInfo.isEmpty()) {
       cinfo.add(token_type, libInfo);
     }
   }
@@ -381,10 +408,7 @@ public class getInfoFunction extends AbstractFunction {
         linfo.addProperty("type", ls.getType().name());
         linfo.addProperty("scale", ls.isScaleWithToken());
         linfo.addProperty("ignores-vbl", ls.isIgnoresVBL());
-        // List<Light> lights = new ArrayList<Light>();
-        // for (Light light : ls.getLightList()) {
-        // lights.add(light);
-        // }
+
         JsonArray lightList = new JsonArray();
         for (Light light : ls.getLightList()) {
           lightList.add(gson.toJsonTree(light));
@@ -417,6 +441,7 @@ public class getInfoFunction extends AbstractFunction {
       state.addProperty("isShowOthers", bto.isShowOthers() ? BigDecimal.ONE : BigDecimal.ZERO);
       state.addProperty(
           "isImageOverlay", (bto instanceof ImageTokenOverlay) ? BigDecimal.ONE : BigDecimal.ZERO);
+      // TODO Shouldn't assetId be included if isImageOverlay is true??
       state.addProperty("mouseOver", bto.isMouseover() ? BigDecimal.ONE : BigDecimal.ZERO);
       state.addProperty("opacity", bto.getOpacity());
       state.addProperty("order", bto.getOrder());
@@ -488,7 +513,7 @@ public class getInfoFunction extends AbstractFunction {
       bar.addProperty("isShowGM", tbo.isShowGM() ? BigDecimal.ONE : BigDecimal.ZERO);
       bar.addProperty("isShowOwner", tbo.isShowOwner() ? BigDecimal.ONE : BigDecimal.ZERO);
       bar.addProperty("isShowOthers", tbo.isShowOthers() ? BigDecimal.ONE : BigDecimal.ZERO);
-
+      // TODO TokenBars can have images; should we include assetIds??
       bgroup.add(bar);
       barinfo.add(group, bgroup);
     }
@@ -507,8 +532,27 @@ public class getInfoFunction extends AbstractFunction {
 
     // Currently, just the color info is returned.
     for (Map.Entry<Object, Object> entry : UIManager.getDefaults().entrySet()) {
-      if (entry.getValue() instanceof Color) {
-        Color color = (Color) entry.getValue();
+      if (entry.getValue() instanceof Color color) {
+        // TODO Other functions use String.format("#%h", ...) instead -- same here??
+        theme.addProperty((String) entry.getKey(), Integer.toHexString(color.getRGB()));
+      }
+    }
+    return theme;
+  }
+
+  /**
+   * Get Theme List
+   *
+   * @return JsonObject of all loaded theme names and their
+   * info (as per <code>getInfo("theme")</code>).
+   */
+  private JsonObject getThemeList() {
+    JsonObject theme = new JsonObject();
+
+    // Currently, just the color info is returned.
+    for (Map.Entry<Object, Object> entry : UIManager.getDefaults().entrySet()) {
+      if (entry.getValue() instanceof Color color) {
+        // TODO Other functions use String.format("#%h", ...) instead -- same here??
         theme.addProperty((String) entry.getKey(), Integer.toHexString(color.getRGB()));
       }
     }
@@ -519,7 +563,6 @@ public class getInfoFunction extends AbstractFunction {
    * Retrieves debug information
    *
    * @return the debug information.
-   * @throws ParserException if an error occurs.
    */
   private JsonObject getDebugInfo() {
     return sysInfoProvider.getSysInfoJSON();

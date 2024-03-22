@@ -21,11 +21,6 @@ import com.jidesoft.docking.DockableFrame;
 import com.jidesoft.docking.DockingManager;
 import com.jidesoft.docking.event.DockableFrameAdapter;
 import com.jidesoft.docking.event.DockableFrameEvent;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Stream;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.functions.MacroLinkFunction;
 import net.rptools.maptool.client.ui.MapToolFrame;
@@ -35,6 +30,11 @@ import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.Token;
 import net.rptools.maptool.util.FunctionUtil;
 import net.rptools.parser.ParserException;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Represents a dockable frame holding an HTML panel. Can hold either an HTML3.2 (Swing) or a HTML5
@@ -344,7 +344,7 @@ public class HTMLFrame extends DockableFrame implements HTMLPanelContainer {
    * Return a json with the width, height, title, temporary, and value of the frame
    *
    * @param name the name of the frame.
-   * @return a json with the width, height, title, temporary, and value of the frame, if one was
+   * @return a json with the width, height, title, tabtitle, html5, temporary, visible, docked, floating, autohide, undocked_coords, and value of the frame, if one was
    *     found
    */
   public static Optional<JsonObject> getFrameProperties(String name) {
@@ -383,20 +383,12 @@ public class HTMLFrame extends DockableFrame implements HTMLPanelContainer {
       Object frameValue = frame.getValue();
       if (frameValue == null) {
         frameValue = "";
-      } else {
-        if (frameValue instanceof String) {
-          // try to convert to a number
-          try {
-            frameValue = new BigDecimal(frameValue.toString());
-          } catch (Exception e) {
-          }
-        }
       }
       if (frameValue instanceof JsonElement) {
         frameProperties.add("value", (JsonElement) frameValue);
+      } else {
+        frameProperties.addProperty("value", frameValue.toString());
       }
-      frameProperties.addProperty("value", frameValue.toString());
-
       return Optional.of(frameProperties);
     } else {
       return Optional.empty();
