@@ -21,10 +21,7 @@ import com.google.gson.JsonParser;
 import com.jidesoft.plaf.LookAndFeelFactory;
 import net.rptools.maptool.client.AppConstants;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.ui.themes.AahLAF;
-import net.rptools.maptool.client.ui.themes.AahLAF_LP;
-import net.rptools.maptool.client.ui.themes.AahLAF_SP;
-import net.rptools.maptool.client.ui.themes.AahLAF_VLP;
+import net.rptools.maptool.client.ui.themes.*;
 import net.rptools.maptool.events.MapToolEventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -162,7 +159,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Arc Dark Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkContrastIJTheme.class,
+            FlatArcDarkContrastIJTheme.class,
             "Arc-Dark-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -177,8 +174,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Atom One Dark Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkContrastIJTheme
-                .class,
+            FlatAtomOneDarkContrastIJTheme.class,
             "Atom-One-Dark-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -188,8 +184,7 @@ public class ThemeSupport {
             false),
         new ThemeDetails(
             "Atom One Light Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightContrastIJTheme
-                .class,
+            FlatAtomOneLightContrastIJTheme.class,
             "Atom-One-Light-Contrast-Material.png",
             false),
         new ThemeDetails(
@@ -229,7 +224,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Darcula Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatDraculaContrastIJTheme.class,
+            FlatDraculaContrastIJTheme.class,
             "Darcula-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -239,7 +234,7 @@ public class ThemeSupport {
             false),
         new ThemeDetails(
             "GitHub Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubContrastIJTheme.class,
+            FlatGitHubContrastIJTheme.class,
             "GitHub-Contrast-Material.png",
             false),
         new ThemeDetails(
@@ -249,8 +244,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "GitHub Dark Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatGitHubDarkContrastIJTheme
-                .class,
+            FlatGitHubDarkContrastIJTheme.class,
             "GitHub-Dark-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -312,8 +306,7 @@ public class ThemeSupport {
             false),
         new ThemeDetails(
             "Light Owl Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatLightOwlContrastIJTheme
-                .class,
+            FlatLightOwlContrastIJTheme.class,
             "Light-Owl-Contrast-Material.png",
             false),
         new ThemeDetails(
@@ -328,8 +321,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Material Darker Contrast",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerContrastIJTheme
-                .class,
+            FlatMaterialDarkerContrastIJTheme.class,
             "Material-Darker-Contrast.png",
             true),
         new ThemeDetails(
@@ -340,8 +332,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Material Deep Ocean Contrast",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite
-                .FlatMaterialDeepOceanContrastIJTheme.class,
+            FlatMaterialDeepOceanContrastIJTheme.class,
             "Material-Deep-Ocean-Contrast.png",
             true),
         new ThemeDetails(
@@ -351,8 +342,7 @@ public class ThemeSupport {
             false),
         new ThemeDetails(
             "Material Lighter Contrast",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite
-                .FlatMaterialLighterContrastIJTheme.class,
+            FlatMaterialLighterContrastIJTheme.class,
             "Material-Lighter-Contrast.png",
             false),
         new ThemeDetails(
@@ -362,8 +352,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Material Oceanic Contrast",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite
-                .FlatMaterialOceanicContrastIJTheme.class,
+            FlatMaterialOceanicContrastIJTheme.class,
             "Material-Oceanic-Contrast.png",
             true),
         new ThemeDetails(
@@ -374,8 +363,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Material Palenight Contrast",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite
-                .FlatMaterialPalenightContrastIJTheme.class,
+            FlatMaterialPalenightContrastIJTheme.class,
             "Material-Palenight-Contrast.png",
             true),
         new ThemeDetails(
@@ -395,8 +383,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Monokai Pro Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProContrastIJTheme
-                .class,
+            FlatMonokaiProContrastIJTheme.class,
             "Monokai-Pro-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -406,8 +393,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Moonlight Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMoonlightContrastIJTheme
-                .class,
+            FlatMoonlightContrastIJTheme.class,
             "Moonlight-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -419,8 +405,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Night Owl Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatNightOwlContrastIJTheme
-                .class,
+            FlatNightOwlContrastIJTheme.class,
             "Night-Owl-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -440,8 +425,7 @@ public class ThemeSupport {
             true),
         new ThemeDetails(
             "Solarized Dark Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedDarkContrastIJTheme
-                .class,
+            FlatSolarizedDarkContrastIJTheme.class,
             "Solarized-Dark-Contrast-Material.png",
             true),
         new ThemeDetails(
@@ -456,8 +440,7 @@ public class ThemeSupport {
             false),
         new ThemeDetails(
             "Solarized Light Contrast (Material)",
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightContrastIJTheme
-                .class,
+            FlatSolarizedLightContrastIJTheme.class,
             "Solarized-Light-Contrast-Material.png",
             false),
         new ThemeDetails(
@@ -479,6 +462,7 @@ public class ThemeSupport {
         new ThemeDetails("Aah(Large Print)", AahLAF_LP.class, "Aah-LP.png", false),
         new ThemeDetails("Aah(Small Print)", AahLAF_SP.class, "Aah-SP.png", false),
         new ThemeDetails("Aah(Very Large Print)", AahLAF_VLP.class, "Aah-VLP.png", false),
+        new ThemeDetails("Aark", AarkLaF.class, "Aark.png", true),
       };
 
   /** The current theme being used. */

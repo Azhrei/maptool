@@ -141,7 +141,9 @@ public class InputFunction extends AbstractFunction {
           Pattern.compile("(\\w+)=([\\w-,]+);"); // no spaces allowed, semicolon required
       Matcher matcher = pattern.matcher(nameval);
       while (matcher.find()) {
-        defaultOptions.put(matcher.group(1).toUpperCase(Locale.ROOT), matcher.group(2).toUpperCase(Locale.ROOT));
+        defaultOptions.put(
+            matcher.group(1).toUpperCase(Locale.ROOT),
+	    matcher.group(2).toUpperCase(Locale.ROOT));
       }
     }
 

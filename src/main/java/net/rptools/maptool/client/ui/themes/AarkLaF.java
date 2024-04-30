@@ -12,13 +12,23 @@
  * <http://www.gnu.org/licenses/> and specifically the Affero license
  * text at <http://www.gnu.org/licenses/agpl.html>.
  */
-package net.rptools.clientserver.simple.server;
+package net.rptools.maptool.client.ui.themes;
 
-import net.rptools.clientserver.simple.connection.Connection;
-import net.rptools.maptool.server.Handshake;
+import com.formdev.flatlaf.FlatDarkLaf;
 
-public interface HandshakeProvider {
-  Handshake getConnectionHandshake(Connection conn);
+public class AarkLaF extends FlatDarkLaf {
+  public static final String NAME = "Aark";
 
-  void releaseHandshake(Connection conn);
+  public static boolean setup() {
+    return setup(new AarkLaF());
+  }
+
+  public static void installLafInfo() {
+    installLafInfo(NAME, AarkLaF.class);
+  }
+
+  @Override
+  public String getName() {
+    return NAME;
+  }
 }
