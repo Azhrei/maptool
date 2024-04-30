@@ -49,6 +49,12 @@ import net.rptools.parser.ParserException;
 import net.rptools.parser.VariableResolver;
 import net.rptools.parser.function.Function;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Provides static methods to help handle macro functions.
  *
@@ -666,14 +672,15 @@ public class FunctionUtil {
    */
   public static @Nullable MD5Key getAssetKeyFromString(String assetUrlOrId) {
     String id = null;
-    if (assetUrlOrId.toLowerCase().startsWith("asset://")) {
+    final String paramAsLC = assetUrlOrId.toLowerCase(Locale.ROOT);
+    if (paramAsLC.startsWith("asset://")) {
       id = assetUrlOrId.substring("asset://".length());
-    } else if (assetUrlOrId.toLowerCase().startsWith("lib://")) {
+    } else if (paramAsLC.startsWith("lib://")) {
       var assetKey = new AssetResolver().getAssetKey(assetUrlOrId);
       if (assetKey.isPresent()) {
         id = assetKey.get().toString();
       }
-    } else if (assetUrlOrId.toLowerCase().startsWith("image:")) {
+    } else if (paramAsLC.startsWith("image:")) {
       for (ZoneRenderer z : MapTool.getFrame().getZoneRenderers()) {
         Token t = z.getZone().getTokenByName(assetUrlOrId);
         if (t != null) {
