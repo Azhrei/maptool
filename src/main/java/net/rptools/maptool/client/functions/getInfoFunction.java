@@ -26,6 +26,15 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 import javax.swing.*;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
+import javax.swing.*;
 import net.rptools.maptool.client.AppConstants;
 import net.rptools.maptool.client.AppPreferences;
 import net.rptools.maptool.client.MapTool;
@@ -47,16 +56,6 @@ import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 import net.rptools.parser.VariableResolver;
 import net.rptools.parser.function.AbstractFunction;
-
-import javax.swing.*;
-import java.awt.*;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public class getInfoFunction extends AbstractFunction {
 
