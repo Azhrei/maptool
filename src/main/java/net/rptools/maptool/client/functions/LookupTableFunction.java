@@ -29,7 +29,7 @@ import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 import net.rptools.parser.VariableResolver;
 import net.rptools.parser.function.AbstractFunction;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,13 +38,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 
 public class LookupTableFunction extends AbstractFunction {
 
@@ -204,7 +197,7 @@ public class LookupTableFunction extends AbstractFunction {
    * Returns the lookupTable object identified by <code>name</code> if it exists in the campaign.
    * Otherwise, throws <code>ParserException</code>.
    *
-   * @param function name of MTscript function (for error message)
+   * @param function name of MapTool script function (for error message)
    * @param name name of table
    * @return table identified by <code>name</code>
    * @throws ParserException Thrown for any access errors to the named table (unknown, access
@@ -269,7 +262,7 @@ public class LookupTableFunction extends AbstractFunction {
    *   <li>{@code resetTablePicks(tblName, entriesToReset, "json")} - entriesToReset is a JsonArray
    * </ul>
    *
-   * @param function name of the MTscript function (used for error messages)
+   * @param function name of the MapTool script function (used for error messages)
    * @param params list of function parameters
    * @throws ParserException Thrown when an invalid or missing parameter is supplied
    */
@@ -473,9 +466,9 @@ public class LookupTableFunction extends AbstractFunction {
   /**
    * Loads bulk data into a table. The table must already exist. Usage:
    *
-   * <p>{@code [h: loadTable(name, jsondata)]}
+   * <p>{@code [h: loadTable(name, json_data)]}
    *
-   * <p>The {@code jsondata} must be a JSON Array containing table entries, and each table entry
+   * <p>The {@code json_data} must be a JSON Array containing table entries, and each table entry
    * must be a JSON Array containing:
    *
    * <ol>
@@ -486,8 +479,8 @@ public class LookupTableFunction extends AbstractFunction {
    *       MD5Key})
    * </ol>
    *
-   * @param function name of this MTscript function, "{@code loadTable}"
-   * @param params parameters of the MTscript function
+   * @param function name of this MapTool script function, "{@code loadTable}"
+   * @param params parameters of the MapTool script function
    * @return a number indicating the successful record count, or a {@link JsonArray} of all elements
    *     that failed to load
    * @throws ParserException Thrown when syntax errors are detected in the input data. This includes
@@ -616,7 +609,7 @@ public class LookupTableFunction extends AbstractFunction {
   }
 
   /**
-   * Checks whether or not the function is trusted
+   * Checks whether the function is trusted
    *
    * @param functionName Name of the macro function
    * @throws ParserException Returns trust error message and function name

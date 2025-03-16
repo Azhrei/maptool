@@ -15,10 +15,6 @@
 package net.rptools.maptool.model;
 
 import com.google.protobuf.StringValue;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import net.rptools.dicelib.expression.ExpressionParser;
 import net.rptools.dicelib.expression.Result;
 import net.rptools.lib.MD5Key;
@@ -27,6 +23,11 @@ import net.rptools.maptool.server.proto.LookupEntryDto;
 import net.rptools.maptool.server.proto.LookupTableDto;
 import net.rptools.parser.ParserException;
 import org.jetbrains.annotations.Contract;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * LookupTable represents a table of die roll ranges and a String value (with an optional asset ID).
@@ -146,10 +147,6 @@ public class LookupTable {
   public LookupEntry getLookup() throws ParserException {
     return getLookup(null);
   }
-
-  //  public String getRoll() {
-  //    return getDefaultRoll();
-  //  }
 
   /**
    * Set the table name.
@@ -410,9 +407,9 @@ public class LookupTable {
   }
 
   /**
-   * Get a List of the LookupEntrys for this table.
+   * Get a List of the LookupEntry's for this table.
    *
-   * @return unmodifiable list of LookupEntrys
+   * @return unmodifiable list of LookupEntry's
    */
   public List<LookupEntry> getEntryList() {
     return Collections.unmodifiableList(entryList);
