@@ -112,7 +112,7 @@ apache-tika                  = { group = "org.apache.tika",             name = "
 
 # Parsing and serialization
 # Better JSON functions
-gson                         = { group = "com.google.code.gson",        name = "gson",                    version = "2.10.1"          }
+gson                         = { group = "com.google.code.gson",        name = "gson",                    version = "2.12.1"          }
 # JsonPath for java
 jsonpath                     = { group = "com.jayway.jsonpath",         name = "json-path",               version = "2.9.0"           }
 # HTML parsing
