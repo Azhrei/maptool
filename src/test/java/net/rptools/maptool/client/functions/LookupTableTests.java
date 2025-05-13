@@ -14,12 +14,12 @@
  */
 package net.rptools.maptool.client.functions;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import net.rptools.lib.MD5Key;
 import net.rptools.maptool.model.LookupTable;
 import net.rptools.parser.ParserException;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LookupTableTests {
   private static final LookupTable table = new LookupTable();

@@ -156,7 +156,7 @@ public class LookupTable {
    *
    * @param name name of the table
    */
-  public void setName(@org.jetbrains.annotations.Nullable String name) {
+  public void setName(@Nullable String name) {
     this.name = name;
   }
 
@@ -165,7 +165,7 @@ public class LookupTable {
    *
    * @return name of the table
    */
-  public @org.jetbrains.annotations.Nullable String getName() {
+  public @Nullable String getName() {
     return name;
   }
 
@@ -228,11 +228,10 @@ public class LookupTable {
   private LookupEntry getStandardLookup(String roll) throws ParserException {
     int tableResult = 0;
     LookupEntry retEntry = null;
+    String result = expressionParser.evaluate(roll).getValue().toString();
 
     try {
-      Result result = expressionParser.evaluate(roll);
-      tableResult = Integer.parseInt(result.getValue().toString());
-
+      tableResult = Integer.parseInt(result);
       tableResult = constrainRoll(tableResult);
 
       for (LookupEntry entry : entryList) {
@@ -240,11 +239,9 @@ public class LookupTable {
           retEntry = entry;
         }
       }
-
     } catch (NumberFormatException nfe) {
-      throw new ParserException("Error lookup up value: " + tableResult);
+      throw new ParserException("Error in lookup value: " + result);
     }
-
     return retEntry;
   }
 
@@ -345,7 +342,6 @@ public class LookupTable {
       if (defaultRoll != null && !defaultRoll.isEmpty()) {
         return defaultRoll;
       }
-
       // Find the min and max range
       Integer min = null;
       Integer max = null;
@@ -358,7 +354,6 @@ public class LookupTable {
           max = entry.max;
         }
       }
-
       return min != null ? "d" + (max - min + 1) + (min - 1 != 0 ? "+" + (min - 1) : "") : "";
     }
   }
@@ -420,7 +415,7 @@ public class LookupTable {
    *
    * @return MD5Key
    */
-  public @org.jetbrains.annotations.Nullable MD5Key getTableImage() {
+  public @Nullable MD5Key getTableImage() {
     return tableImage;
   }
 
@@ -429,7 +424,7 @@ public class LookupTable {
    *
    * @param tableImage The MD5Key (Asset ID) for the image.
    */
-  public void setTableImage(@org.jetbrains.annotations.Nullable MD5Key tableImage) {
+  public void setTableImage(@Nullable MD5Key tableImage) {
     this.tableImage = tableImage;
   }
 
@@ -506,8 +501,8 @@ public class LookupTable {
     public LookupEntry(
         int min,
         int max,
-        @org.jetbrains.annotations.Nullable String value,
-        @org.jetbrains.annotations.Nullable MD5Key imageId) {
+        @Nullable String value,
+        @Nullable MD5Key imageId) {
       this.min = min;
       this.max = max;
       this.value = value;
@@ -529,7 +524,7 @@ public class LookupTable {
       return this;
     }
 
-    public @org.jetbrains.annotations.Nullable MD5Key getImageId() {
+    public @Nullable MD5Key getImageId() {
       return imageId;
     }
 
@@ -549,7 +544,7 @@ public class LookupTable {
       return min;
     }
 
-    public @org.jetbrains.annotations.Nullable String getValue() {
+    public @Nullable String getValue() {
       return value;
     }
 
